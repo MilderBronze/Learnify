@@ -31,6 +31,24 @@ export default function CourseInformationForm() {
   const { course, editCourse } = useSelector((state) => state.course)
   const [loading, setLoading] = useState(false)
   const [courseCategories, setCourseCategories] = useState([])
+  /**
+   * workflow
+when page rerenders.. get all categories.. kyuki usko course creation ke time pe categories select
+krte waqt chahiye hoga for that drop down list.
+so useeffect ke andar getcoursecategories wala fn call krenge... uske liye ek async fn likhna hoga
+and fir uss async function ko use effect ke andar hii call kr denge.
+acha categories aa gya toh fiir check if categories array is greater than 0.
+if yes.. categories ko set kr do using setCourseCategories.
+and ye puri ki puri api call hai toh before and after loading set true and false respectively.
+
+also, iss page me ham log http://localhost:3000/dashboard/my-courses iss route se bhi pohoch skte hain
+kaise?
+by clicking on the edit button (pencil icon).
+so we've gotta check if edit is true or not. we'll do that using the state course boolean atom editCourse.
+
+and yahi issi use effect me check krna hoga ki editCourse true hai ya nai.
+agar true hai, toh form ke saare elements ko prefill kr do with the actual data available in the state atom course.
+*/
 
   useEffect(() => {
     const getCategories = async () => {
@@ -42,6 +60,8 @@ export default function CourseInformationForm() {
       }
       setLoading(false)
     }
+    getCategories()
+
     // if form is in edit mode
     if (editCourse) {
       // console.log("data populated", editCourse)
@@ -54,7 +74,6 @@ export default function CourseInformationForm() {
       setValue("courseRequirements", course.instructions)
       setValue("courseImage", course.thumbnail)
     }
-    getCategories()
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -83,46 +102,48 @@ export default function CourseInformationForm() {
     // console.log(data)
 
     if (editCourse) {
+      console.log("data.courseImage", data.courseImage)
+
       // const currentValues = getValues()
       // console.log("changes after editing form values:", currentValues)
       // console.log("now course:", course)
       // console.log("Has Form Changed:", isFormUpdated())
       if (isFormUpdated()) {
-        const currentValues = getValues()
+        // const currentValues = getValues()
         const formData = new FormData()
-        // console.log(data)
+        // course ki id is being set while pressing one of the pencil icon.. like multiple course create kr rkhe honge instructor ne.. usne kisi ek pe pencil (edit) pe click kiya hoga. so, then the id of that course gets set to formData's key : courseId.
         formData.append("courseId", course._id)
-        if (currentValues.courseTitle !== course.courseName) {
+        if (data.courseTitle !== course.courseName) {
           formData.append("courseName", data.courseTitle)
         }
-        if (currentValues.courseShortDesc !== course.courseDescription) {
+        if (data.courseShortDesc !== course.courseDescription) {
           formData.append("courseDescription", data.courseShortDesc)
         }
-        if (currentValues.coursePrice !== course.price) {
+        if (data.coursePrice !== course.price) {
           formData.append("price", data.coursePrice)
         }
-        if (currentValues.courseTags.toString() !== course.tag.toString()) {
+        // converting to array because 2 different arrays cant check for their equality. as they go around by different references in the memory. so its important to convert them to string and then convert.
+        if (data.courseTags.toString() !== course.tag.toString()) {
           formData.append("tag", JSON.stringify(data.courseTags))
         }
-        if (currentValues.courseBenefits !== course.whatYouWillLearn) {
+        if (data.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits)
         }
-        if (currentValues.courseCategory._id !== course.category._id) {
+        // since coursecategory is not directly stored in the course table, instead, an object reference is stored in there.. so, to extract it.. use courseCategory._id.
+        if (data.courseCategory._id !== course.category._id) {
           formData.append("category", data.courseCategory)
         }
         if (
-          currentValues.courseRequirements.toString() !==
-          course.instructions.toString()
+          data.courseRequirements.toString() !== course.instructions.toString()
         ) {
           formData.append(
             "instructions",
             JSON.stringify(data.courseRequirements)
           )
         }
-        if (currentValues.courseImage !== course.thumbnail) {
+        if (data.courseImage !== course.thumbnail) {
           formData.append("thumbnailImage", data.courseImage)
         }
-        // console.log("Edit Form data: ", formData)
         setLoading(true)
         const result = await editCourseDetails(formData, token)
         setLoading(false)
@@ -136,7 +157,11 @@ export default function CourseInformationForm() {
       return
     }
 
+    // this part is the else part.. when editmode is false..
+
     const formData = new FormData()
+    console.log("data.courseImage", data.courseImage)
+
     formData.append("courseName", data.courseTitle)
     formData.append("courseDescription", data.courseShortDesc)
     formData.append("price", data.coursePrice)
@@ -166,6 +191,8 @@ export default function CourseInformationForm() {
           Course Title <sup className="text-pink-200">*</sup>
         </label>
         <input
+          name="courseTitle"
+          type="text"
           id="courseTitle"
           placeholder="Enter Course Title"
           {...register("courseTitle", { required: true })}
@@ -183,6 +210,8 @@ export default function CourseInformationForm() {
           Course Short Description <sup className="text-pink-200">*</sup>
         </label>
         <textarea
+          name="courseShortDesc"
+          type="text"
           id="courseShortDesc"
           placeholder="Enter Description"
           {...register("courseShortDesc", { required: true })}
@@ -201,13 +230,14 @@ export default function CourseInformationForm() {
         </label>
         <div className="relative">
           <input
+            name="coursePrice"
             id="coursePrice"
             placeholder="Enter Course Price"
             {...register("coursePrice", {
               required: true,
               valueAsNumber: true,
               pattern: {
-                value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                value: /^(0|[1-9]\d*)(\.\d{2})?$/,
               },
             })}
             className="form-style w-full !pl-12"
@@ -229,6 +259,7 @@ export default function CourseInformationForm() {
           {...register("courseCategory", { required: true })}
           defaultValue=""
           id="courseCategory"
+          name="courseCategory"
           className="form-style w-full"
         >
           <option value="" disabled>
@@ -272,6 +303,8 @@ export default function CourseInformationForm() {
           Benefits of the course <sup className="text-pink-200">*</sup>
         </label>
         <textarea
+          name="courseBenefits"
+          type="text"
           id="courseBenefits"
           placeholder="Enter benefits of the course"
           {...register("courseBenefits", { required: true })}
@@ -298,7 +331,7 @@ export default function CourseInformationForm() {
           <button
             onClick={() => dispatch(setStep(2))}
             disabled={loading}
-            className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900`}
+            className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 px-[20px] py-[8px] font-semibold text-richblack-900`}
           >
             Continue Wihout Saving
           </button>

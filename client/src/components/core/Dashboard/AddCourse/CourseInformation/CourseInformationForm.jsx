@@ -100,6 +100,20 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
   //   handle next button click
   const onSubmit = async (data) => {
     // console.log(data)
+    console.log("course category", data.courseCategory)
+    // the above gives an entire mongodb document reference.
+    /**
+     {_id: '687c5ec8cbcddda4e45f1671',
+     name: 'Infotainment',
+     description: 'Awareness about the IT-sector, be it job openings … the time, how to earn money as a college student', 
+     courses: Array(1),
+     __v: 0}
+    courses:['687c61d0f20b6934577fb60a']
+    description: "Awareness about the IT-sector, be it job openings in some MNC, which course to purchase, how to manage the time, how to earn money as a college student"
+    name:"Infotainment"
+    __v:0
+    _id: "687c5ec8cbcddda4e45f1671"
+*/
 
     if (editCourse) {
       console.log("data.courseImage", data.courseImage)

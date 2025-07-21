@@ -13,6 +13,9 @@ export default function RequirementsField({
   const [requirement, setRequirement] = useState("")
   const [requirementsList, setRequirementsList] = useState([])
 
+  // total 2 useeffects honge..
+  // ek ka kaam hai: page render hote hii component ko register krna and check krna if editcourse is true.
+  // dusre ka kaam hai: requirementlist change hote hii value set kr dena.
   useEffect(() => {
     if (editCourse) {
       setRequirementsList(course?.instructions)

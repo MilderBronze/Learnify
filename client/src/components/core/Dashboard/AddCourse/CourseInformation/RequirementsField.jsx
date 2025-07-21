@@ -23,6 +23,11 @@ export default function RequirementsField({
 
   useEffect(() => {
     setValue(name, requirementsList)
+    // ye kyu kiya.. unlike courseinformationform.jsx file.. kyuki
+    // usme direct inputs thhe jo control ho rhe the.
+    // here it is like a custom component which contains several elements like label div input etc.
+    // toh iske liye useeffect ke andar register krna hoga.
+    // and manually changing array ko dependency list me daal ke form ki value set krni hogi.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requirementsList])
 

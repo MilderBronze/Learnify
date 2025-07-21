@@ -16,17 +16,33 @@ export default function EditCourse() {
   const [loading, setLoading] = useState(false)
   const { token } = useSelector((state) => state.auth)
 
+  // useEffect(() => {
+  //   return (async () => {
+  //     setLoading(true)
+  //     const result = await getFullDetailsOfCourse(courseId, token)
+  //     if (result?.courseDetails) {
+  //       dispatch(setEditCourse(true))
+  //       dispatch(setCourse(result?.courseDetails))
+  //     }
+  //     setLoading(false)
+  //   })()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
   useEffect(() => {
-    ;(async () => {
+    const fetchData = async () => {
       setLoading(true)
       const result = await getFullDetailsOfCourse(courseId, token)
+      console.log("result from getfulldetailsofcourse: ", result)
+
       if (result?.courseDetails) {
         dispatch(setEditCourse(true))
         dispatch(setCourse(result?.courseDetails))
       }
       setLoading(false)
-    })()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+
+    fetchData()
+    // eslint-disable-next-line
   }, [])
 
   if (loading) {

@@ -65,12 +65,15 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
     // if form is in edit mode
     if (editCourse) {
       // console.log("data populated", editCourse)
+      // we arent stringifying anything here because we arent sending anything to the backend yet.
+      // we are just prefilling the form.
       setValue("courseTitle", course.courseName)
       setValue("courseShortDesc", course.courseDescription)
       setValue("coursePrice", course.price)
       setValue("courseTags", course.tag)
       setValue("courseBenefits", course.whatYouWillLearn)
-      setValue("courseCategory", course.category)
+      // setValue("courseCategory", course.category)
+      setValue("courseCategory", course.category._id) // made this change for the new release
       setValue("courseRequirements", course.instructions)
       setValue("courseImage", course.thumbnail)
     }
@@ -144,15 +147,18 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
           formData.append("whatYouWillLearn", data.courseBenefits)
         }
         // since coursecategory is not directly stored in the course table, instead, an object reference is stored in there.. so, to extract it.. use courseCategory._id.
-        if (data.courseCategory._id !== course.category._id) {
+        if (data.courseCategory !== course.category) {
           formData.append("category", data.courseCategory)
         }
         if (
+          // string me convert kiye kyuki 2 arrays cant be equal due to their non primitive nature.. i.e. they are gonna have different memory references.
           data.courseRequirements.toString() !== course.instructions.toString()
         ) {
           formData.append(
             "instructions",
             JSON.stringify(data.courseRequirements)
+            // when we send data in body via postman, remember we always send things as key value pairs with everything within "" (double quotes)..
+            // this clearly shows that the backend needs everything in string format..  stringify krke bhjo and process hone ke baad parse kr lo. simple.
           )
         }
         if (data.courseImage !== course.thumbnail) {
@@ -189,7 +195,7 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
     const result = await addCourseDetails(formData, token)
     if (result) {
       dispatch(setStep(2))
-      dispatch(setCourse(result))
+      dispatch(setCourse(result)) // course set kr diya.
     }
     setLoading(false)
   }
@@ -231,7 +237,7 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
           {...register("courseShortDesc", { required: true })}
           className="form-style resize-x-none min-h-[130px] w-full"
         />
-        {errors.courseShortDesc && (
+        {errors["courseShortDesc"] && (
           <span className="ml-2 text-xs tracking-wide text-pink-200">
             Course Description is required
           </span>
@@ -351,6 +357,7 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
           </button>
         )}
         <IconBtn
+          type="submit" // even if you do not specify this.. it would still consider type as submit by default.
           disabled={loading}
           text={!editCourse ? "Next" : "Save Changes"}
         >

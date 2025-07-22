@@ -22,6 +22,7 @@ export default function CourseBuilderForm() {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm()
 
@@ -30,12 +31,40 @@ export default function CourseBuilderForm() {
   const [loading, setLoading] = useState(false)
   const [editSectionName, setEditSectionName] = useState(null)
   const dispatch = useDispatch()
+  const [dbSectionName, setDbSectionName] = useState("")
+
+  // fixed: Now returns boolean instead of being treated as a reference
+  const isFormUpdated = () => {
+    const currentValues = getValues()
+    return currentValues.sectionName !== dbSectionName
+  }
 
   // handle form submission
   const onSubmit = async (data) => {
-    // console.log(data)
-    setLoading(true)
+    if (!isFormUpdated()) {
+      // fixed: calling function properly
+      // wf:
+      /**
+     * 
+you click on a section edit icon, toh uska id and name pass ho gya inside handleeditfn.
+fiir maine ek state variable bana liya
+and handleeditfn ke andar state variable ki value set kr di.
+so ab i know what was the name of the section to be edited.
+var name is dbSectionName.
+ab user form me kuch change krega ya nai krega...
+ye cheez tb check hogi jab user form submit krega..
+so onsubmit fn pe jaake we need to check for this.
+how will we check?
+if val inserted by the user is different from dbSectionName.
+if that is the scenario.. then cool. let the form update.
+otherwise.. show toast.error.
 
+     */
+      toast.error("Nothing seems changed!")
+      return
+    }
+
+    setLoading(true)
     let result
 
     if (editSectionName) {
@@ -47,7 +76,6 @@ export default function CourseBuilderForm() {
         },
         token
       )
-      // console.log("edit", result)
     } else {
       result = await createSection(
         {
@@ -57,12 +85,13 @@ export default function CourseBuilderForm() {
         token
       )
     }
+
     if (result) {
-      // console.log("section result", result)
       dispatch(setCourse(result))
       setEditSectionName(null)
       setValue("sectionName", "")
     }
+
     setLoading(false)
   }
 
@@ -72,10 +101,11 @@ export default function CourseBuilderForm() {
   }
 
   const handleChangeEditSectionName = (sectionId, sectionName) => {
-    if (editSectionName === sectionId) {
+    if (editSectionName === sectionName) {
       cancelEdit()
       return
     }
+    setDbSectionName(sectionName)
     setEditSectionName(sectionId)
     setValue("sectionName", sectionName)
   }
@@ -147,7 +177,7 @@ export default function CourseBuilderForm() {
       <div className="flex justify-end gap-x-3">
         <button
           onClick={goBack}
-          className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900`}
+          className="flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 px-[20px] py-[8px] font-semibold text-richblack-900"
         >
           Back
         </button>

@@ -4,7 +4,8 @@
 
 html,
 body {
-  overflow: hidden;
+  overflow-x: hidden;
+  max-height: max-content;
 }
 
 /* ===== Scrollbar CSS ===== */

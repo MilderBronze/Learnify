@@ -59,6 +59,8 @@ export default function NestedView({ handleChangeEditSectionName }) {
         {course?.courseContent?.map((section) => (
           // Section Dropdown
           <details key={section._id} open>
+            {/* details tag helps create a drop down.
+            it contains summary, which acts as a clickable label or a header */}
             {/* Section Dropdown Content */}
             <summary className="flex cursor-pointer items-center justify-between border-b-2 border-b-richblack-600 py-2">
               <div className="flex items-center gap-x-3">

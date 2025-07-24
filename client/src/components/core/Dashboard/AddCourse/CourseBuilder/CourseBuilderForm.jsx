@@ -171,6 +171,7 @@ otherwise.. show toast.error.
         </div>
       </form>
       {course.courseContent.length > 0 && (
+        // courseContent is nothing but the sections in a specific course.
         <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
       )}
       {/* Next Prev Button */}

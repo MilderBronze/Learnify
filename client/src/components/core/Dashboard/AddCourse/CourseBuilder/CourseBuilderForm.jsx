@@ -112,6 +112,10 @@ otherwise.. show toast.error.
     setEditSectionName(sectionId)
     setValue("sectionName", sectionName)
   }
+  // its like ... there would be various sections and all of them are gonna have the edit button tool.
+  // so why not create a reusable component for that and render it for all the coursecontents by using map.. and pass this fn to that component.
+  // then, all you've gotta do is.. inside of the component, pass the id of that particular component and you are done.
+  // the logic of that function would reside in the parent component and all the child components would use that fn logic. crazy innit!?
 
   const goToNext = () => {
     if (course.courseContent.length === 0) {

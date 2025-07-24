@@ -101,10 +101,13 @@ otherwise.. show toast.error.
   }
 
   const handleChangeEditSectionName = (sectionId, sectionName) => {
-    if (editSectionName === sectionName) {
-      cancelEdit()
-      return
-    }
+    // if (editSectionName === sectionName) {
+    //   cancelEdit()
+    //   return
+    // }
+    /**
+     This code block is checking whether the section name that you're trying to edit is already the same as the one that's currently being edited. Here's what it's doing line by line
+     */
     setDbSectionName(sectionName)
     setEditSectionName(sectionId)
     setValue("sectionName", sectionName)

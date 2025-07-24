@@ -71,11 +71,14 @@ export default function NestedView({ handleChangeEditSectionName }) {
               </div>
               <div className="flex items-center gap-x-3">
                 <button
-                  onClick={() =>
-                    handleChangeEditSectionName(
-                      section._id,
-                      section.sectionName
-                    )
+                  onClick={
+                    () =>
+                      handleChangeEditSectionName(
+                        section._id,
+                        section.sectionName
+                      )
+                    // passed section name because it represents the input field ka component.
+                    // passed section id because backend needs to know which section is gonna be edited.
                   }
                 >
                   <MdEdit className="text-xl text-richblack-300" />

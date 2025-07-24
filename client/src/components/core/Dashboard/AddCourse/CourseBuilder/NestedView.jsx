@@ -33,6 +33,7 @@ export default function NestedView({ handleChangeEditSectionName }) {
     })
     if (result) {
       dispatch(setCourse(result))
+      // we are setting course because now we gotta store the updated course in the course variable because now the course no longer contains the section that we just deleted.
     }
     setConfirmationModal(null)
   }

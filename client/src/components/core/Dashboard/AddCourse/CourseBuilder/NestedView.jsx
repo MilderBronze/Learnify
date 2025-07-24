@@ -36,9 +36,17 @@ export default function NestedView({ handleChangeEditSectionName }) {
       // we are setting course because now we gotta store the updated course in the course variable because now the course no longer contains the section that we just deleted.
     }
     setConfirmationModal(null)
+    // delete wale fn me ky pass kr rhe..?
+    // jo delete hone wala h, uski id,
+    // jisme se delete hone wala hai, uski id,
+    // and token.. because the backend api endpoint needs to know if the instructor is even allowed to hit the protected route.
   }
 
   const handleDeleteSubSection = async (subSectionId, sectionId) => {
+    // delete wale fn me ky pass kr rhe..?
+    // jo delete hone wala h, uski id,
+    // jisme se delete hone wala hai, uski id,
+    // and token.. because the backend api endpoint needs to know if the instructor is even allowed to hit the protected route.
     const result = await deleteSubSection({ subSectionId, sectionId, token })
     if (result) {
       // update the structure of course

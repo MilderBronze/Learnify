@@ -126,6 +126,15 @@ export default function NestedView({ handleChangeEditSectionName }) {
                   </div>
                   <div
                     onClick={(e) => e.stopPropagation()}
+                    /**
+✅ e.stopPropagation() is used to:
+
+Prevent clicks on child elements (edit/delete buttons) from triggering the parent’s click handler (which would open the view modal).
+
+It's like saying:
+
+“I handled this click here — don’t let it go up the chain.”
+*/
                     className="flex items-center gap-x-3"
                   >
                     <button

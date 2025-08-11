@@ -92,7 +92,7 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
       currentValues.courseBenefits !== course.whatYouWillLearn ||
       currentValues.courseCategory._id !== course.category._id ||
       currentValues.courseRequirements.toString() !==
-        course.instructions.toString() ||
+      course.instructions.toString() ||
       currentValues.courseImage !== course.thumbnail
     ) {
       return true
@@ -181,7 +181,6 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
 
     const formData = new FormData()
     console.log("data.courseImage", data.courseImage)
-
     formData.append("courseName", data.courseTitle)
     formData.append("courseDescription", data.courseShortDesc)
     formData.append("price", data.coursePrice)

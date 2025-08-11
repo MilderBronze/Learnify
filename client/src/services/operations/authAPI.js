@@ -13,7 +13,9 @@ const {
   RESETPASSTOKEN_API,
   RESETPASSWORD_API,
 } = endpoints
-
+// when you call dispatch(sendOtp(email, navigate))
+// you first do this: const dispatch = useDispatch()
+// because of that, you do not need to pass dispatch as a parameter and sendOtp just uses dispatch directly.
 export function sendOtp(email, navigate) {
   return async (dispatch) => {
     const toastId = toast.loading("Loading...")

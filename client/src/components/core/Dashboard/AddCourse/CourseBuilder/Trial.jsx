@@ -103,7 +103,7 @@ export const Trial = () => {
             </form>
             {
                 course.courseContent.length > 0 && (
-                    <NestedView />
+                    <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
                 )
             }
             <div>

@@ -87,8 +87,10 @@ export default function SubSectionModal({
     setLoading(true)
     const result = await updateSubSection(formData, token)
     if (result) {
-      // console.log("result", result)
+      console.log("result", result)
       // update the structure of course
+      // since we have got the subsection updated we need to insert the subsection into section array and then update the course by inserting the updated section array into course.
+      // first lets insert the subsection into section array
       const updatedCourseContent = course.courseContent.map((section) =>
         section._id === modalData.sectionId ? result : section
       )
@@ -122,11 +124,13 @@ export default function SubSectionModal({
     if (result) {
       console.log("updated section", result);
 
+      // since we have got the subsection created
       // update the structure of course
       const updatedCourseContent = course.courseContent.map((section) =>
         section._id === modalData ? result : section
       )
-      const updatedCourse = { ...course, courseContent: updatedCourseContent }  
+
+      const updatedCourse = { ...course, courseContent: updatedCourseContent }
       // so what this means is that just take whatever is inside of course and course ke andar ka courseContent array hai na.. usko replace kr do with this courseContent array which we have created above i.e. updatedCourseContent.
       dispatch(setCourse(updatedCourse))
     }

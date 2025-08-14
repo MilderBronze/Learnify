@@ -131,7 +131,7 @@ agar true hai, toh form ke saare elements ko prefill kr do with the actual data 
         // course ki id is being set while pressing one of the pencil icon.. like multiple course create kr rkhe honge instructor ne.. usne kisi ek pe pencil (edit) pe click kiya hoga. so, then the id of that course gets set to formData's key : courseId.
         formData.append("courseId", course._id)
         if (data.courseTitle !== course.courseName) {
-          formData.append("courseName", data.courseTitle)
+          formData.append("courseName", data.courseTitle) // : contains key value pairs where key is the column name from the model.
         }
         if (data.courseShortDesc !== course.courseDescription) {
           formData.append("courseDescription", data.courseShortDesc)

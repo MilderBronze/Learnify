@@ -37,7 +37,7 @@ export default function Upload({
       : { "video/*": [".mp4"] },
     onDrop,
   })
-
+  
   const previewFile = (file) => {
     // console.log(file)
     const reader = new FileReader()
@@ -46,7 +46,7 @@ export default function Upload({
       setPreviewSource(reader.result)
     }
   }
-
+  
   useEffect(() => {
     register(name, { required: true })
     // eslint-disable-next-line react-hooks/exhaustive-deps

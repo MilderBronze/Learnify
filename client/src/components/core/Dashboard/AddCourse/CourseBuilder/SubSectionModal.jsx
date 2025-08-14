@@ -27,9 +27,9 @@ export default function SubSectionModal({
     getValues,
   } = useForm()
 
-  // console.log("view", view)
-  // console.log("edit", edit)
-  // console.log("add", add)
+  console.log("view", view)
+  console.log("edit", edit)
+  console.log("add", add)
 
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -37,8 +37,15 @@ export default function SubSectionModal({
   const { course } = useSelector((state) => state.course)
 
   useEffect(() => {
-    if (view || edit) {
+    if (add) {
+      setValue("lectureTitle", "");
+      setValue("lectureDesc", "");
+      setValue("lectureVideo", "");
+    }
+    else { // view or edit
       // console.log("modalData", modalData)
+      // modaldata is an object passed from the parent component NestedTrial.jsx file and contains 3 things: title, description and videoUrl
+      // and ye lectureTitle, lectureDesc, lectureVideo are the ids of the fields in the form which we have created below.. check html yar.
       setValue("lectureTitle", modalData.title)
       setValue("lectureDesc", modalData.description)
       setValue("lectureVideo", modalData.videoUrl)
@@ -62,9 +69,12 @@ export default function SubSectionModal({
   // handle the editing of subsection
   const handleEditSubsection = async () => {
     const currentValues = getValues()
+    console.log("currentValues.lectureVideo", currentValues.lectureVideo)
     // console.log("changes after editing form values:", currentValues)
     const formData = new FormData()
     // console.log("Values After Editing form values:", currentValues)
+    // sectionid, and subsectionid alag se ni milega... usko pass krna pada... because there are no form elements that accpet in sectionid and subsectionid.
+    // isliye unko modalData se leke aaye
     formData.append("sectionId", modalData.sectionId)
     formData.append("subSectionId", modalData._id)
     if (currentValues.lectureTitle !== modalData.title) {
@@ -73,9 +83,7 @@ export default function SubSectionModal({
     if (currentValues.lectureDesc !== modalData.description) {
       formData.append("description", currentValues.lectureDesc)
     }
-    if (currentValues.lectureVideo !== modalData.videoUrl) {
-      formData.append("video", currentValues.lectureVideo)
-    }
+    formData.append("video", currentValues.lectureVideo)
     setLoading(true)
     const result = await updateSubSection(formData, token)
     if (result) {
@@ -93,7 +101,7 @@ export default function SubSectionModal({
 
   const onSubmit = async (data) => {
     // console.log(data)
-    if (view) return
+    if (view) return // you do not submit, you just view
 
     if (edit) {
       if (!isFormUpdated()) {
@@ -103,7 +111,7 @@ export default function SubSectionModal({
       }
       return
     }
-
+    // else add new subsection 
     const formData = new FormData()
     formData.append("sectionId", modalData)
     formData.append("title", data.lectureTitle)
@@ -112,11 +120,14 @@ export default function SubSectionModal({
     setLoading(true)
     const result = await createSubSection(formData, token)
     if (result) {
+      console.log("updated section", result);
+
       // update the structure of course
       const updatedCourseContent = course.courseContent.map((section) =>
         section._id === modalData ? result : section
       )
-      const updatedCourse = { ...course, courseContent: updatedCourseContent }
+      const updatedCourse = { ...course, courseContent: updatedCourseContent }  
+      // so what this means is that just take whatever is inside of course and course ke andar ka courseContent array hai na.. usko replace kr do with this courseContent array which we have created above i.e. updatedCourseContent.
       dispatch(setCourse(updatedCourse))
     }
     setModalData(null)

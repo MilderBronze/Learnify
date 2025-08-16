@@ -104,6 +104,7 @@ exports.deleteSection = async (req, res) => {
       });
     }
     // Delete the associated subsections
+    // meaning subsections table me jaake saare subsections ko delete kro jo uss deleted section ke andar ho.
     await SubSection.deleteMany({ _id: { $in: section.subSection } });
 
     await Section.findByIdAndDelete(sectionId);

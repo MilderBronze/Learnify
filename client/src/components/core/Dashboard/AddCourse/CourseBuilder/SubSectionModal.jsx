@@ -94,6 +94,15 @@ export default function SubSectionModal({
       const updatedCourseContent = course.courseContent.map((section) =>
         section._id === modalData.sectionId ? result : section
       )
+      /**
+yes, you're correct! When the condition is true, result gets put into updatedCourseContent at that specific index position.
+The end result is a new array (updatedCourseContent) where:
+
+Most positions contain the original sections (unchanged)
+One position contains result (the updated section from the API)
+
+Think of it like this: map() is building a new array piece by piece, and for each piece it decides "should I use the old section or the new updated section?"
+       */
       const updatedCourse = { ...course, courseContent: updatedCourseContent }
       dispatch(setCourse(updatedCourse))
     }
@@ -207,7 +216,7 @@ export default function SubSectionModal({
             <div className="flex justify-end">
               <IconBtn
                 disabled={loading}
-                text={loading ? "Loading.." : edit ? "Save Changes" : "Save"}
+                text={edit ? "Save Changes" : "Save"}
               />
             </div>
           )}
